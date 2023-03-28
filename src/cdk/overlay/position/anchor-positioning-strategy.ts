@@ -26,7 +26,6 @@ declare global {
   interface HTMLElement {
     anchorElement: Element | undefined;
   }
-
   interface CSSStyleDeclaration {
     positionFallback?: string;
   }
