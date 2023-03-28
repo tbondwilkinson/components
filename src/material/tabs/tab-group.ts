@@ -523,6 +523,7 @@ export abstract class _MatTabGroupBase
     },
   ],
   host: {
+    'ngSkipHydration': 'true',
     'class': 'mat-mdc-tab-group',
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
@@ -566,6 +567,8 @@ export class MatTabGroup extends _MatTabGroupBase {
       defaultConfig && defaultConfig.fitInkBarToContent != null
         ? defaultConfig.fitInkBarToContent
         : false;
+    this.stretchTabs =
+      defaultConfig && defaultConfig.stretchTabs != null ? defaultConfig.stretchTabs : true;
   }
 }
 

@@ -1,22 +1,188 @@
-<a name="15.2.0-next.3"></a>
-# 15.2.0-next.3 "tritium-turnstile" (2023-02-02)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [50ec808eae](https://github.com/angular/components/commit/50ec808eaef5b554df382591a6a58f88b429237f) | fix | **collections:** SelectionModel does not always respect the compareWith function ([#26447](https://github.com/angular/components/pull/26447)) |
+<a name="16.0.0-next.3"></a>
+# 16.0.0-next.3 "limonite-lime" (2023-03-23)
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [48b4445a1c](https://github.com/angular/components/commit/48b4445a1ca367555df44166312a1df470fc12c6) | fix | **checkbox:** focus not moved to input when clicking on touch target ([#26545](https://github.com/angular/components/pull/26545)) |
-| [0e35cc0e5d](https://github.com/angular/components/commit/0e35cc0e5ddacc34eadf133a270a6d31a88d31f5) | fix | **dialog:** take dialog background from theme palette ([#26324](https://github.com/angular/components/pull/26324)) |
-| [a1d5614f18](https://github.com/angular/components/commit/a1d5614f18066c0c2dc2580c7b5099e8f68a8e74) | fix | **tabs:** set color on disabled tabs ([#26319](https://github.com/angular/components/pull/26319)) |
-| [fd9853da88](https://github.com/angular/components/commit/fd9853da88f3cb93a82ce38e207ace8047bec958) | fix | **tabs:** unable to click projected content in tab label ([#26527](https://github.com/angular/components/pull/26527)) |
-### google-maps
+| [7e9878c96](https://github.com/angular/components/commit/7e9878c96e18a5252d0c95d01d3b467d74525246) | fix | **card:** tokenize the card elevation ([#26770](https://github.com/angular/components/pull/26770)) |
+| [76eeaaf20](https://github.com/angular/components/commit/76eeaaf204cfcb491492b92f7b08c29074253164) | fix | **checkbox:** refactor to depend on @angular/material/core/tokens ([#26744](https://github.com/angular/components/pull/26744)) |
+| [96aadaa41](https://github.com/angular/components/commit/96aadaa411a3af93626af9aa73fb4abd6600d0b3) | fix | **core:** apply strong focus styles to selected option ([#26811](https://github.com/angular/components/pull/26811)) |
+| [7cd18004d](https://github.com/angular/components/commit/7cd18004d4f3c0c4665eebc19986b92bcdb7783b) | fix | **datepicker:** date range input not marked as required when using reactive forms ([#26749](https://github.com/angular/components/pull/26749)) |
+| [142e845a1](https://github.com/angular/components/commit/142e845a1232cf7fb7256072c60960b7be973eb3) | fix | **tooltip:** only expand hover area on side closest to trigger ([#26786](https://github.com/angular/components/pull/26786)) |
+## Special Thanks
+Kristiyan Kostadinov, Miles Malerba, Sneaky, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.4"></a>
+# 15.2.4 "brimstone-bank" (2023-03-23)
+### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [15648802d0](https://github.com/angular/components/commit/15648802d00341da251e8b8b9da7de8094737696) | fix | error if API is initialized incorrectly ([#26520](https://github.com/angular/components/pull/26520)) |
+| [580fbf500](https://github.com/angular/components/commit/580fbf500c87bbe8753d4bea22b65cd1196c3bbd) | fix | **core:** apply strong focus styles to selected option ([#26811](https://github.com/angular/components/pull/26811)) |
+| [1ba5ade41](https://github.com/angular/components/commit/1ba5ade41c86562d25397a0a3093984245f4118b) | fix | **datepicker:** date range input not marked as required when using reactive forms ([#26749](https://github.com/angular/components/pull/26749)) |
+| [acc7d8148](https://github.com/angular/components/commit/acc7d81484c8d58ca29dfb894984d9a6a8ed41ce) | fix | **tooltip:** only expand hover area on side closest to trigger ([#26786](https://github.com/angular/components/pull/26786)) |
 ## Special Thanks
-Alan Agius, Aurélien Loyer, Kristiyan Kostadinov, MECHERI Akram, Miles Malerba, Paul Gschwendtner, Pei Wang and Wagner Maciel
+Kristiyan Kostadinov, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.0-next.2"></a>
+# 16.0.0-next.2 "feather-shark" (2023-03-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5c5617de4](https://github.com/angular/components/commit/5c5617de4b63daf2bec94f2fc539c48c93a984d3) | fix | **checkbox:** fix ARIA semantics and use native DOM properties ([#26710](https://github.com/angular/components/pull/26710)) |
+| [e3917ea17](https://github.com/angular/components/commit/e3917ea173fdadfe20dba332d69c3d84ea6a8d32) | fix | **chips:** chip label appearing above sticky columns ([#26794](https://github.com/angular/components/pull/26794)) |
+| [f6ea2ff92](https://github.com/angular/components/commit/f6ea2ff92d7e2952742d84c64f684d0251eabc90) | fix | **chips:** don't prevent default mousedown action ([#26765](https://github.com/angular/components/pull/26765)) |
+| [d444c5889](https://github.com/angular/components/commit/d444c588905f5fd4f9587d215385125e16c70cfb) | fix | **chips:** styling not cleared on basic chips in listbox and grid ([#26771](https://github.com/angular/components/pull/26771)) |
+| [946cc6743](https://github.com/angular/components/commit/946cc6743c4d0f46c943fca7fdb2ed07148535d9) | fix | **tabs:** update MatTab _scrollToLabel function to always display a label from its start ([#26736](https://github.com/angular/components/pull/26736)) ([#26737](https://github.com/angular/components/pull/26737)) |
+## Special Thanks
+Boyi Li, Jessica Janiuk, Kristiyan Kostadinov, Paul Gschwendtner and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.3"></a>
+# 15.2.3 "aluminum-statue" (2023-03-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7dfcf8ff3](https://github.com/angular/components/commit/7dfcf8ff3ce49475d3022bd47bc721e6ee34755c) | fix | **checkbox:** fix ARIA semantics and use native DOM properties ([#26710](https://github.com/angular/components/pull/26710)) |
+| [40d38889c](https://github.com/angular/components/commit/40d38889c029605483bd05b384b52fb64addb1ef) | fix | **chips:** chip label appearing above sticky columns ([#26794](https://github.com/angular/components/pull/26794)) |
+| [b846d1e05](https://github.com/angular/components/commit/b846d1e05d71b68cbb66ea118499c78f5138d25e) | fix | **chips:** don't prevent default mousedown action ([#26765](https://github.com/angular/components/pull/26765)) |
+| [501d73e5b](https://github.com/angular/components/commit/501d73e5b6c549ad20e321546c6df964c6510f9a) | fix | **chips:** styling not cleared on basic chips in listbox and grid ([#26771](https://github.com/angular/components/pull/26771)) |
+| [06ed54c25](https://github.com/angular/components/commit/06ed54c2510661cc08ba00fb001ea46ee1cd5ec2) | fix | **tabs:** update MatTab _scrollToLabel function to always display a label from its start ([#26736](https://github.com/angular/components/pull/26736)) ([#26737](https://github.com/angular/components/pull/26737)) |
+## Special Thanks
+Boyi Li, Kristiyan Kostadinov, Paul Gschwendtner and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.0-next.1"></a>
+# 16.0.0-next.1 "jade-jacket" (2023-03-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [168619b12](https://github.com/angular/components/commit/168619b12425978476cebd6b060c007e57b5d3af) | fix | **chips:** unable to shift + tab out of a chip set ([#26727](https://github.com/angular/components/pull/26727)) |
+| [4c8f50554](https://github.com/angular/components/commit/4c8f50554466db6049eeb21e6875347fb3a1e6fd) | fix | **core:** mat-option sets aria-selected="false" ([#26673](https://github.com/angular/components/pull/26673)) |
+| [fbca2e931](https://github.com/angular/components/commit/fbca2e93176e6b263fe7158fd85e2748f5985150) | fix | **datepicker:** resolve server-side rendering error ([#26742](https://github.com/angular/components/pull/26742)) |
+| [3442c0ee0](https://github.com/angular/components/commit/3442c0ee01782fd9f05cf712cc28cf82d8e4f57a) | fix | **paginator:** opt-out of single-selection indicator ([#26746](https://github.com/angular/components/pull/26746)) |
+| [5ea4ca579](https://github.com/angular/components/commit/5ea4ca579c6f829507e04fe6819499c71f7a18d9) | fix | **snack-bar:** live region not working when modal is open ([#26725](https://github.com/angular/components/pull/26725)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7043a51da](https://github.com/angular/components/commit/7043a51da122927f63f6ea9c72ba4c28fafcc507) | fix | **scrolling:** throw error rather than string ([#26736](https://github.com/angular/components/pull/26736)) |
+## Special Thanks
+Kristiyan Kostadinov, RuoJia123, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.2"></a>
+# 15.2.2 "topaz-toast" (2023-03-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e7612c747](https://github.com/angular/components/commit/e7612c747cd75e16f1c36090bb152285c8046d3c) | fix | **chips:** unable to shift + tab out of a chip set ([#26727](https://github.com/angular/components/pull/26727)) |
+| [1bf2fc2e1](https://github.com/angular/components/commit/1bf2fc2e12a1bc4c07b6a88634d599ee00431016) | fix | **core:** mat-option sets aria-selected="false" ([#26673](https://github.com/angular/components/pull/26673)) |
+| [9473b1688](https://github.com/angular/components/commit/9473b1688aeaa61ded53a2ee56fd3a61b91ffd2b) | fix | **datepicker:** resolve server-side rendering error ([#26742](https://github.com/angular/components/pull/26742)) |
+| [99dac0835](https://github.com/angular/components/commit/99dac0835ac71bf381dca66120bb89f78c01e7ee) | fix | **paginator:** opt-out of single-selection indicator ([#26746](https://github.com/angular/components/pull/26746)) |
+| [ec824f1f7](https://github.com/angular/components/commit/ec824f1f75232f88892a2dda02f925e28d29a6ad) | fix | **snack-bar:** live region not working when modal is open ([#26725](https://github.com/angular/components/pull/26725)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e1c8fe85b](https://github.com/angular/components/commit/e1c8fe85bdf81dd84d79d40c24e62d3a2f9f8968) | fix | **scrolling:** throw error rather than string ([#26736](https://github.com/angular/components/pull/26736)) |
+## Special Thanks
+Kristiyan Kostadinov, RuoJia123 and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.0-next.0"></a>
+# 16.0.0-next.0 "adenosine-aside" (2023-03-01)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [506bca5712](https://github.com/angular/components/commit/506bca5712c1b170668eb92d81dac89c7f70a8c7) | feat | **tabs:** add `stretchTabs` to `MatTabsConfig` ([#26644](https://github.com/angular/components/pull/26644)) |
+| [8a32172678](https://github.com/angular/components/commit/8a32172678cf4f1732f4029d26a3266f5599991f) | fix | **card:** refactor to depend on @angular/material/core/tokens ([#26674](https://github.com/angular/components/pull/26674)) |
+## Special Thanks
+Alan Agius, Joel Kesler, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.1"></a>
+# 15.2.1 "silicone-soliloquy" (2023-03-01)
+## Breaking Changes
+### 
+- the description for body-1 and body-2 has changed
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9a57674fea](https://github.com/angular/components/commit/9a57674feae46a26a086b3b8e6abb38c54e95118) | fix | **chips:** allow attribute selectors for chips ([#26683](https://github.com/angular/components/pull/26683)) |
+| [fdf1dc4b07](https://github.com/angular/components/commit/fdf1dc4b07c3044140d5f38634d716b6f58824fc) | fix | **chips:** chips should assume their minimum density rather than error for small densities ([#26688](https://github.com/angular/components/pull/26688)) |
+| [d61443b62d](https://github.com/angular/components/commit/d61443b62d30eda39d1d8f3ef896991d618569f8) | fix | **chips:** remove spans from top level of component ([#26689](https://github.com/angular/components/pull/26689)) |
+| [5e67c1a345](https://github.com/angular/components/commit/5e67c1a345a2829dd53bdb82a60f90f448d5bc96) | fix | **chips:** styling not updating when actions are removed ([#26696](https://github.com/angular/components/pull/26696)) |
+| [a87735e4ba](https://github.com/angular/components/commit/a87735e4bacd5f6abc4c8933c8198ce984df0f33) | fix | **list:** add disabled attribute for mat-list-item buttons ([#26672](https://github.com/angular/components/pull/26672)) |
+| [54d157f3d2](https://github.com/angular/components/commit/54d157f3d2b629d6e025ab92edfd64172a81decd) | fix | **schematics:** migrate to mdc components selectively bug ([#26427](https://github.com/angular/components/pull/26427)) |
+| [4338e5ee57](https://github.com/angular/components/commit/4338e5ee5724a28a434f2d04d3e1f29d43c4a0b3) | fix | **snack-bar:** misaligned lines on safari for long messages ([#26692](https://github.com/angular/components/pull/26692)) |
+### 
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b71fa77f7d](https://github.com/angular/components/commit/b71fa77f7da620fa10dee32503c772758b15413f) | docs | reverse body-1 and body-2 typography description ([#26330](https://github.com/angular/components/pull/26330)) |
+## Special Thanks
+Hamza jayri, Kristiyan Kostadinov, Matthieu Riegler, Miles Malerba, OneSidedPrism, VICTORIA JOHNSON and llorenspujol
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.0"></a>
+# 15.2.0 "sodalite-soda" (2023-02-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [62bd54e8e](https://github.com/angular/components/commit/62bd54e8ed4b55308e8b834515456a07951627b0) | feat | **testing:** add method to set the text of an element |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b42650c88](https://github.com/angular/components/commit/b42650c88c148f722def987d0834e06dcde135b7) | feat | **chips:** add test harness support for edit input |
+| [5e96eb04c](https://github.com/angular/components/commit/5e96eb04ca23a0748860cf67980e319ab108cc4e) | fix | **chips:** add opt-out for single-select checkmarks ([#26338](https://github.com/angular/components/pull/26338)) |
+| [46cfbe566](https://github.com/angular/components/commit/46cfbe566ab99207c3951c6c86aed20f65d925a6) | fix | **core:** add checkmark for single-select ([#25962](https://github.com/angular/components/pull/25962)) |
+## Special Thanks
+Amy Sorto, Hamza jayri, Jonas Brems, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.1.6"></a>
+# 15.1.6 "fluorite-floss" (2023-02-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [248c41221](https://github.com/angular/components/commit/248c41221c0e7415827fa99359c9e25ac4afc039) | fix | **dialog:** not emitting closed event on external detachments ([#26608](https://github.com/angular/components/pull/26608)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [277f65a0f](https://github.com/angular/components/commit/277f65a0f5b5f61ac807e05753260fed7dfae346) | fix | **tabs:** disablePagination not working ([#26647](https://github.com/angular/components/pull/26647)) |
+## Special Thanks
+Joey Perrott and Kristiyan Kostadinov
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.1.5"></a>
+# 15.1.5 "highdensityfoam-pelican" (2023-02-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [994e0a14c](https://github.com/angular/components/commit/994e0a14c9819ce561e603ca8cedefe8657ad2c0) | fix | **core:** Fix legacy prebuilt themes export ([#26624](https://github.com/angular/components/pull/26624)) |
+| [4c8cad2d2](https://github.com/angular/components/commit/4c8cad2d2deb7389a22db1f8318ba2036714a2dc) | fix | **radio:** input not focused when clicking on touch target ([#26618](https://github.com/angular/components/pull/26618)) |
+| [890765bf4](https://github.com/angular/components/commit/890765bf4329db9b8ab9eb097ad0877facb98587) | fix | **slider:** make valueChange emit only on change and not on input ([#26535](https://github.com/angular/components/pull/26535)) |
+## Special Thanks
+Kai Schönberger, Kristiyan Kostadinov, Lukáš Matta, Wagner Maciel, Zach Arend and ᚷᛁᛟᚱᚷᛁ ᛒᚨᛚᚨᚲᚻᚨᛞᛉᛖ
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.1.4"></a>
+# 15.1.4 "felt-fern" (2023-02-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0526ada2ce](https://github.com/angular/components/commit/0526ada2ce5934488d75289ebd1558f9db226caf) | fix | **chips:** unable to add space when editing chip ([#26564](https://github.com/angular/components/pull/26564)) |
+## Special Thanks
+Hubert Frei, Kristiyan Kostadinov and Wagner Maciel
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -42,20 +208,6 @@ Alan Agius, Aurélien Loyer, Kristiyan Kostadinov, MECHERI Akram, Paul Gschwendt
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="15.2.0-next.2"></a>
-# 15.2.0-next.2 "brass-bottle" (2023-01-25)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [434ec52c8](https://github.com/angular/components/commit/434ec52c8de5c714e458ae12514e5b43c6977933) | fix | **core:** top-level font family not copied when converting between typography formats ([#26471](https://github.com/angular/components/pull/26471)) |
-| [5f146901e](https://github.com/angular/components/commit/5f146901e38e08b62d96f20fbb552064c3de2f49) | fix | **core:** use Platform to check whether to run theming check ([#26477](https://github.com/angular/components/pull/26477)) |
-| [834e865d4](https://github.com/angular/components/commit/834e865d48cac7abe3c4316b83591321d6baf5a5) | fix | **schematics:** add string literal check ([#26475](https://github.com/angular/components/pull/26475)) |
-| [f56bd5c24](https://github.com/angular/components/commit/f56bd5c243ff96eca5c72428cb6ac54764e01844) | fix | **schematics:** improve logging of mdc-migration ts migrator ([#26377](https://github.com/angular/components/pull/26377)) |
-## Special Thanks
-Kristiyan Kostadinov, Thomas Chandelle and Wagner Maciel
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="15.1.2"></a>
 # 15.1.2 "arsenic-angel" (2023-01-25)
 ### material
@@ -70,24 +222,6 @@ Kristiyan Kostadinov, Thomas Chandelle and Wagner Maciel
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="15.2.0-next.1"></a>
-# 15.2.0-next.1 "pavement-payphone" (2023-01-18)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [62bd54e8e](https://github.com/angular/components/commit/62bd54e8ed4b55308e8b834515456a07951627b0) | feat | **testing:** add method to set the text of an element |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [b42650c88](https://github.com/angular/components/commit/b42650c88c148f722def987d0834e06dcde135b7) | feat | **chips:** add test harness support for edit input |
-| [46cfbe566](https://github.com/angular/components/commit/46cfbe566ab99207c3951c6c86aed20f65d925a6) | fix | **core:** add checkmark for single-select ([#25962](https://github.com/angular/components/pull/25962)) |
-| [3038d72ac](https://github.com/angular/components/commit/3038d72acbd7a8691e80ebbcc083449dace4aef4) | fix | **schematics:** don't migrate unknown stylesheet formats ([#26450](https://github.com/angular/components/pull/26450)) |
-| [6391fc189](https://github.com/angular/components/commit/6391fc189ae2a94443659e303da32ce391512dd1) | fix | **slider:** Use non-deprecated theme key ([#26378](https://github.com/angular/components/pull/26378)) |
-## Special Thanks
-Alan Agius, Alka Vats, Kevin Vizcarra, Kristiyan Kostadinov and Zach Arend
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="15.1.1"></a>
 # 15.1.1 "purple-plush" (2023-01-18)
 ### material
@@ -98,18 +232,6 @@ Alan Agius, Alka Vats, Kevin Vizcarra, Kristiyan Kostadinov and Zach Arend
 | [072d6d036](https://github.com/angular/components/commit/072d6d03605c71def61bb0f249761a79efa9ed5e) | fix | **slider:** Use non-deprecated theme key ([#26378](https://github.com/angular/components/pull/26378)) |
 ## Special Thanks
 Alan Agius, Alka Vats, Kevin Vizcarra, Kristiyan Kostadinov and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="15.2.0-next.0"></a>
-# 15.2.0-next.0 "cotton-candle" (2023-01-12)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [5e96eb04ca](https://github.com/angular/components/commit/5e96eb04ca23a0748860cf67980e319ab108cc4e) | fix | **chips:** add opt-out for single-select checkmarks ([#26338](https://github.com/angular/components/pull/26338)) |
-| [769e20431a](https://github.com/angular/components/commit/769e20431a05a4ad8230530fa2a4aab9c117a162) | fix | **select:** active class not removed from reset option when new value is assigned through form control ([#26414](https://github.com/angular/components/pull/26414)) |
-## Special Thanks
-Amy Sorto, Kristiyan Kostadinov, Miles Malerba, Paul Gschwendtner and Zach Arend
 
 <!-- CHANGELOG SPLIT MARKER -->
 
