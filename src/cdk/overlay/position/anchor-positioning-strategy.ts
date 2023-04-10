@@ -7,7 +7,8 @@
  */
 
 import {OverlayReference} from '../overlay-reference';
-import {ElementRef} from '@angular/core';
+import {ElementRef, Inject} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {PositionStrategy} from './position-strategy';
 import {Platform} from '@angular/cdk/platform';
 import {ConnectionPositionPair, HorizontalConnectionPos} from './connected-position';
@@ -20,9 +21,13 @@ interface AnchorPositionioningProperty {
   anchorSide: 'top' | 'bottom' | 'left' | 'right' | 'center';
 }
 
+// TODO(tbondwilkinson): Remove once anchorElement is recognized.
 declare global {
   interface HTMLElement {
     anchorElement: Element | undefined;
+  }
+  interface CSSStyleDeclaration {
+    positionFallback?: string;
   }
 }
 
@@ -47,7 +52,14 @@ export class AnchorPositioningStrategy implements PositionStrategy {
   /** Whether the current positioning is stale and should be re-applied. */
   private _stalePositioning = true;
 
-  constructor(anchor: AnchorPositioningStrategyAnchor, private _platform: Platform) {
+  /** The style root to add stylesheets to. */
+  private _styleSheet?: CSSStyleSheet;
+
+  constructor(
+    anchor: AnchorPositioningStrategyAnchor,
+    private _platform: Platform,
+    @Inject(DOCUMENT) private readonly _document: Document,
+  ) {
     this.withAnchor(anchor);
   }
 
@@ -91,18 +103,31 @@ export class AnchorPositioningStrategy implements PositionStrategy {
     }
 
     if (anchor) {
-      // TODO(tbondwilkinson): Remove once anchorElement is recognized.
       this._pane.anchorElement = anchor;
     }
 
-    const positionFallbackName = `position-fallback-${positionFallbackId++}`;
-    const anchorPositioningProperties = this._getAnchorPositioningProperties();
-
-    const styles = {} as CSSStyleDeclaration;
-    for (const {property, anchorSide} of anchorPositioningProperties) {
-      styles[property] = `anchor(${anchorName}${anchorSide})`;
+    const anchorPreferredPositionings = this._getAnchorPreferredPositionings();
+    if (anchorPreferredPositionings.length === 1) {
+      const style = this._pane.style;
+      for (const {property, anchorSide} of anchorPreferredPositionings[0]) {
+        style[property] = `anchor(--${anchorName}${anchorSide})`;
+      }
+      return;
     }
-    extendStyles(this._pane.style, styles);
+    const positionFallbackName = `--overlay-fallback-${positionFallbackId++}`;
+    let positionFallback = `@position-fallback ${positionFallbackName} {\n`;
+
+    for (const positioning of anchorPreferredPositionings) {
+      positionFallback += '@try {\n';
+      for (const {property, anchorSide} of positioning) {
+        positionFallback += `${property}: anchor(--${anchorName} ${anchorSide});\n`;
+      }
+      positionFallback += '}\n';
+    }
+    positionFallback += '}';
+
+    this._pane.style.positionFallback = positionFallbackName;
+    this._addPositionFallbackStyle(positionFallback);
   }
 
   /** Called when the overlay is detached. */
@@ -119,6 +144,7 @@ export class AnchorPositioningStrategy implements PositionStrategy {
     this._resetOverlayElementStyles();
     this.detach();
     this._overlayRef = null;
+    this._styleSheet?.replaceSync('');
     this._isDisposed = true;
   }
 
@@ -146,28 +172,30 @@ export class AnchorPositioningStrategy implements PositionStrategy {
     return this;
   }
 
-  private _getAnchorPositioningProperties(): AnchorPositionioningProperty[] {
+  private _getAnchorPreferredPositionings(): AnchorPositionioningProperty[][] {
     let overlayRect: DOMRect | undefined;
-    const anchorPositioningProperties: AnchorPositionioningProperty[] = [];
+    const anchorPositioningProperties: AnchorPositionioningProperty[][] = [];
     for (const positionPair of this._preferredPositions) {
       const xProperty = this._logicalToPhysicalPosition(positionPair.overlayX);
       if (xProperty === 'center') {
         // TODO(tbondwilkinson): Support center.
         throw new Error('overlay center not supported by Anchor Positioning');
       }
-      anchorPositioningProperties.push({
-        property: xProperty,
-        anchorSide: this._logicalToPhysicalPosition(positionPair.originX),
-      });
       const yProperty = positionPair.overlayY;
       if (yProperty === 'center') {
         // TODO(twilkinson): Support center.
         throw new Error('overlay center not supported by Anchor Positioning');
       }
-      anchorPositioningProperties.push({
-        property: yProperty,
-        anchorSide: positionPair.originY,
-      });
+      anchorPositioningProperties.push([
+        {
+          property: xProperty,
+          anchorSide: this._logicalToPhysicalPosition(positionPair.originX),
+        },
+        {
+          property: yProperty,
+          anchorSide: positionPair.originY,
+        },
+      ]);
     }
     return anchorPositioningProperties;
   }
@@ -186,30 +214,20 @@ export class AnchorPositioningStrategy implements PositionStrategy {
 
   /** Resets the styles for the overlay pane so that a new positioning can be computed. */
   private _resetOverlayElementStyles() {
-    extendStyles(this._pane.style, {
-      top: '',
-      bottom: '',
-      left: '',
-      right: '',
-    } as CSSStyleDeclaration);
+    this._pane.style.top = '';
+    this._pane.style.bottom = '';
+    this._pane.style.left = '';
+    this._pane.style.right = '';
   }
 
   /** Whether the we're dealing with an RTL context */
   private _isRtl() {
     return this._overlayRef!.getDirection() === 'rtl';
   }
-}
 
-/** Shallow-extends a stylesheet object with another stylesheet object. */
-function extendStyles(
-  destination: CSSStyleDeclaration,
-  source: CSSStyleDeclaration,
-): CSSStyleDeclaration {
-  for (let key in source) {
-    if (source.hasOwnProperty(key)) {
-      destination[key] = source[key];
-    }
+  private _addPositionFallbackStyle(style: string) {
+    this._styleSheet = new CSSStyleSheet();
+    this._styleSheet.replaceSync(style);
+    this._document.adoptedStyleSheets = [...this._document.adoptedStyleSheets, this._styleSheet];
   }
-
-  return destination;
 }

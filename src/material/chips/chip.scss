@@ -167,6 +167,12 @@
   }
 }
 
+// Keeps basic listbox chips looking consistent with the other variations. Listbox chips don't
+// inherit the font size, because they wrap the label in a `button` that has user agent styles.
+.mat-mdc-basic-chip .mdc-evolution-chip__action--primary {
+  font: inherit;
+}
+
 // MDC's focus and hover indication is handled through their ripple which we currently
 // don't use due to size concerns so we have to re-implement it ourselves.
 .mat-mdc-chip-focus-overlay {
@@ -220,6 +226,11 @@
 // Required for the strong focus indicator to fill the chip.
 .mat-mdc-chip {
   position: relative;
+
+  // `.mat-mdc-chip-action-label` below sets a `z-index: 1` to put the label above the focus
+  // overlay, but that can also cause it to appear above other elements like sticky columns
+  // (see #26793). Set an explicit `z-index` to prevent the label from leaking out.
+  z-index: 0;
 }
 
 .mat-mdc-chip-action-label {

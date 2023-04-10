@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {BACKSPACE, DELETE, ENTER} from '@angular/cdk/keycodes';
+import {BACKSPACE, DELETE, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
   dispatchEvent,
@@ -96,11 +96,8 @@ describe('MDC-based Row Chips', () => {
         expect(testComponent.chipRemove).toHaveBeenCalledWith({chip: chipInstance});
       });
 
-      it('should prevent the default click action', () => {
-        const event = dispatchFakeEvent(chipNativeElement, 'mousedown');
-        fixture.detectChanges();
-
-        expect(event.defaultPrevented).toBe(true);
+      it('should have a tabindex', () => {
+        expect(chipNativeElement.getAttribute('tabindex')).toBe('-1');
       });
 
       it('should have the correct role', () => {
@@ -189,8 +186,8 @@ describe('MDC-based Row Chips', () => {
       });
 
       describe('focus management', () => {
-        it('sends focus to first grid cell on mousedown', () => {
-          dispatchFakeEvent(chipNativeElement, 'mousedown');
+        it('sends focus to first grid cell on root chip focus', () => {
+          dispatchFakeEvent(chipNativeElement, 'focus');
           fixture.detectChanges();
 
           expect(document.activeElement).toHaveClass('mdc-evolution-chip__action--primary');
@@ -330,6 +327,14 @@ describe('MDC-based Row Chips', () => {
         keyDownOnPrimaryAction(ENTER, 'Enter');
         flush();
         expect(document.activeElement).not.toBe(primaryAction);
+      }));
+
+      it('should not prevent SPACE events when editing', fakeAsync(() => {
+        const event = dispatchKeyboardEvent(getEditInput(), 'keydown', SPACE);
+        fixture.detectChanges();
+        flush();
+
+        expect(event.defaultPrevented).toBe(false);
       }));
     });
 

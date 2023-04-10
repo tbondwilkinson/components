@@ -59,9 +59,9 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
 @Component({
   selector: 'mat-chip-listbox',
   template: `
-    <span class="mdc-evolution-chip-set__chips" role="presentation">
+    <div class="mdc-evolution-chip-set__chips" role="presentation">
       <ng-content></ng-content>
-    </span>
+    </div>
   `,
   styleUrls: ['chip-set.css'],
   inputs: ['tabIndex'],
@@ -75,6 +75,7 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-orientation]': 'ariaOrientation',
+    'ngSkipHydration': 'true',
     '[class.mat-mdc-chip-list-disabled]': 'disabled',
     '[class.mat-mdc-chip-list-required]': 'required',
     '(focus)': 'focus()',

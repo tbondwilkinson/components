@@ -61,8 +61,11 @@ export const MAT_CHIP_TRAILING_ICON: InjectionToken<unknown>;
 export const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 // @public
-export class MatChip extends _MatChipMixinBase implements AfterViewInit, CanColor, CanDisableRipple, CanDisable, HasTabIndex, OnDestroy {
+export class MatChip extends _MatChipMixinBase implements OnInit, AfterViewInit, AfterContentInit, CanColor, CanDisableRipple, CanDisable, HasTabIndex, OnDestroy {
     constructor(_changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _focusMonitor: FocusMonitor, _document: any, animationMode?: string, _globalRippleOptions?: RippleGlobalOptions | undefined, tabIndex?: string);
+    protected _allLeadingIcons: QueryList<MatChipAvatar>;
+    protected _allRemoveIcons: QueryList<MatChipRemove>;
+    protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
     _animationsDisabled: boolean;
     ariaDescription: string | null;
     _ariaDescriptionId: string;
@@ -86,14 +89,18 @@ export class MatChip extends _MatChipMixinBase implements AfterViewInit, CanColo
     // (undocumented)
     protected _highlighted: boolean;
     id: string;
-    readonly _isBasicChip: boolean;
+    _isBasicChip: boolean;
     readonly _isRippleCentered = false;
     _isRippleDisabled(): boolean;
     leadingIcon: MatChipAvatar;
     // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     // (undocumented)
     protected _ngZone: NgZone;
     readonly _onBlur: Subject<MatChipEvent>;
@@ -114,7 +121,7 @@ export class MatChip extends _MatChipMixinBase implements AfterViewInit, CanColo
     // (undocumented)
     protected _value: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChip, "mat-basic-chip, mat-chip", ["matChip"], { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "role": "role"; "id": "id"; "ariaLabel": "aria-label"; "ariaDescription": "aria-description"; "value": "value"; "removable": "removable"; "highlighted": "highlighted"; }, { "removed": "removed"; "destroyed": "destroyed"; }, ["leadingIcon", "trailingIcon", "removeIcon"], ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChip, "mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]", ["matChip"], { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "role": "role"; "id": "id"; "ariaLabel": "aria-label"; "ariaDescription": "aria-description"; "value": "value"; "removable": "removable"; "highlighted": "highlighted"; }, { "removed": "removed"; "destroyed": "destroyed"; }, ["leadingIcon", "trailingIcon", "removeIcon", "_allLeadingIcons", "_allTrailingIcons", "_allRemoveIcons"], ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChip, [null, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }
@@ -360,7 +367,7 @@ export class MatChipOption extends MatChip implements OnInit {
     _setSelectedState(isSelected: boolean, isUserInput: boolean, emitEvent: boolean): void;
     toggleSelected(isUserInput?: boolean): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipOption, "mat-basic-chip-option, mat-chip-option", never, { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "selectable": "selectable"; "selected": "selected"; }, { "selectionChange": "selectionChange"; }, never, ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipOption, "mat-basic-chip-option, [mat-basic-chip-option], mat-chip-option, [mat-chip-option]", never, { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "selectable": "selectable"; "selected": "selected"; }, { "selectionChange": "selectionChange"; }, never, ["mat-chip-avatar, [matChipAvatar]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipOption, never>;
 }
@@ -387,19 +394,19 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     contentEditInput?: MatChipEditInput;
     defaultEditInput?: MatChipEditInput;
     // (undocumented)
-    _doubleclick(event: MouseEvent): void;
-    // (undocumented)
     editable: boolean;
     readonly edited: EventEmitter<MatChipEditedEvent>;
+    // (undocumented)
+    _handleDoubleclick(event: MouseEvent): void;
+    _handleFocus(): void;
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     _hasTrailingIcon(): boolean;
     // (undocumented)
     _isEditing: boolean;
-    _mousedown(event: MouseEvent): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, mat-basic-chip-row", never, { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "editable": "editable"; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "*", "[matChipEditInput]", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]", never, { "color": "color"; "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "editable": "editable"; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "*", "[matChipEditInput]", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipRow, [null, null, null, null, null, { optional: true; }, { optional: true; }, { attribute: "tabindex"; }]>;
 }

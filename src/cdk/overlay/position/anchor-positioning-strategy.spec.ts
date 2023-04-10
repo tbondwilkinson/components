@@ -12,6 +12,12 @@ import {
 import {MockNgZone} from '@angular/cdk/testing/private';
 import {Platform} from '@angular/cdk/platform';
 
+declare global {
+  interface CSSStyleDeclaration {
+    anchorName?: string;
+  }
+}
+
 // Default width and height of the overlay and origin panels throughout these tests.
 const DEFAULT_HEIGHT = 30;
 const DEFAULT_WIDTH = 60;
@@ -61,7 +67,7 @@ describe('AnchorPositioningStrategy', () => {
     beforeEach(() => {
       anchor = createPositionedBlockElement();
       document.body.appendChild(anchor);
-      positionStrategy = new AnchorPositioningStrategy(anchor, platform);
+      positionStrategy = new AnchorPositioningStrategy('anchor', platform, document);
     });
 
     afterEach(() => {
@@ -104,6 +110,7 @@ function createBlockElement(tagName = 'div', namespace?: string) {
   } else {
     element = document.createElement(tagName);
   }
+  element.style.anchorName = 'anchor';
 
   element.style.width = `${DEFAULT_WIDTH}px`;
   element.style.height = `${DEFAULT_HEIGHT}px`;

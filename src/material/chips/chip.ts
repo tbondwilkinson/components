@@ -10,6 +10,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   AfterViewInit,
+  AfterContentInit,
   Component,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,6 +26,9 @@ import {
   ViewEncapsulation,
   ViewChild,
   Attribute,
+  ContentChildren,
+  QueryList,
+  OnInit,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -41,7 +45,7 @@ import {
   RippleGlobalOptions,
 } from '@angular/material/core';
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Subject} from 'rxjs';
+import {merge, Subject, Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 import {MatChipAvatar, MatChipTrailingIcon, MatChipRemove} from './chip-icons';
 import {MatChipAction} from './chip-action';
@@ -80,7 +84,7 @@ const _MatChipMixinBase = mixinTabIndex(
  * Extended by MatChipOption and MatChipRow for different interaction patterns.
  */
 @Component({
-  selector: 'mat-basic-chip, mat-chip',
+  selector: 'mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]',
   inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   exportAs: 'matChip',
   templateUrl: 'chip.html',
@@ -112,7 +116,15 @@ const _MatChipMixinBase = mixinTabIndex(
 })
 export class MatChip
   extends _MatChipMixinBase
-  implements AfterViewInit, CanColor, CanDisableRipple, CanDisable, HasTabIndex, OnDestroy
+  implements
+    OnInit,
+    AfterViewInit,
+    AfterContentInit,
+    CanColor,
+    CanDisableRipple,
+    CanDisable,
+    HasTabIndex,
+    OnDestroy
 {
   protected _document: Document;
 
@@ -126,7 +138,7 @@ export class MatChip
   readonly _onBlur = new Subject<MatChipEvent>();
 
   /** Whether this chip is a basic (unstyled) chip. */
-  readonly _isBasicChip: boolean;
+  _isBasicChip: boolean;
 
   /** Role for the root of the chip. */
   @Input() role: string | null = null;
@@ -137,8 +149,23 @@ export class MatChip
   /** Whether moving focus into the chip is pending. */
   private _pendingFocus: boolean;
 
+  /** Subscription to changes in the chip's actions. */
+  private _actionChanges: Subscription | undefined;
+
   /** Whether animations for the chip are enabled. */
   _animationsDisabled: boolean;
+
+  /** All avatars present in the chip. */
+  @ContentChildren(MAT_CHIP_AVATAR, {descendants: true})
+  protected _allLeadingIcons: QueryList<MatChipAvatar>;
+
+  /** All trailing icons present in the chip. */
+  @ContentChildren(MAT_CHIP_TRAILING_ICON, {descendants: true})
+  protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
+
+  /** All remove icons present in the chip. */
+  @ContentChildren(MAT_CHIP_REMOVE, {descendants: true})
+  protected _allRemoveIcons: QueryList<MatChipRemove>;
 
   _hasFocus() {
     return this._hasFocusInternal;
@@ -238,16 +265,21 @@ export class MatChip
     @Attribute('tabindex') tabIndex?: string,
   ) {
     super(elementRef);
-    const element = elementRef.nativeElement;
     this._document = _document;
     this._animationsDisabled = animationMode === 'NoopAnimations';
-    this._isBasicChip =
-      element.hasAttribute(this.basicChipAttrName) ||
-      element.tagName.toLowerCase() === this.basicChipAttrName;
     if (tabIndex != null) {
       this.tabIndex = parseInt(tabIndex) ?? this.defaultTabIndex;
     }
     this._monitorFocus();
+  }
+
+  ngOnInit() {
+    // This check needs to happen in `ngOnInit` so the overridden value of
+    // `basicChipAttrName` coming from base classes can be picked up.
+    const element = this._elementRef.nativeElement;
+    this._isBasicChip =
+      element.hasAttribute(this.basicChipAttrName) ||
+      element.tagName.toLowerCase() === this.basicChipAttrName;
   }
 
   ngAfterViewInit() {
@@ -259,8 +291,19 @@ export class MatChip
     }
   }
 
+  ngAfterContentInit(): void {
+    // Since the styling depends on the presence of some
+    // actions, we have to mark for check on changes.
+    this._actionChanges = merge(
+      this._allLeadingIcons.changes,
+      this._allTrailingIcons.changes,
+      this._allRemoveIcons.changes,
+    ).subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
+    this._actionChanges?.unsubscribe();
     this.destroyed.emit({chip: this});
     this.destroyed.complete();
   }
