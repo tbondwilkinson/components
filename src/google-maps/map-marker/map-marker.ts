@@ -18,6 +18,7 @@ import {
   Directive,
   OnChanges,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import {Observable} from 'rxjs';
 
@@ -43,7 +44,7 @@ export const DEFAULT_MARKER_OPTIONS = {
   exportAs: 'mapMarker',
 })
 export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
-  private _eventManager = new MapEventManager(this._ngZone);
+  private _eventManager = new MapEventManager(inject(NgZone));
 
   /**
    * Title of the marker.
@@ -375,7 +376,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
    * See
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getLabel
    */
-  getLabel(): google.maps.MarkerLabel | null {
+  getLabel(): google.maps.MarkerLabel | string | null {
     this._assertInitialized();
     return this.marker.getLabel() || null;
   }

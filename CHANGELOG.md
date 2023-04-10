@@ -1,3 +1,76 @@
+<a name="16.0.0-next.5"></a>
+# 16.0.0-next.5 "polyester-peach" (2023-04-06)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5825d4aa59](https://github.com/angular/components/commit/5825d4aa5925466a79c93441fd71a0a62d151d3f) | fix | **menu:** move focus when opening via click ([#26874](https://github.com/angular/components/pull/26874)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2604f15424](https://github.com/angular/components/commit/2604f1542470d3951fecbe06f6f020d1fd67b775) | feat | **button:** change icon-button to use MDC's token API ([#26824](https://github.com/angular/components/pull/26824)) |
+| [d6d3e3e506](https://github.com/angular/components/commit/d6d3e3e506e03d1ec33e96b786da42570ede9505) | feat | **button:** make button ripples lazy ([#26568](https://github.com/angular/components/pull/26568)) |
+| [b049b8d816](https://github.com/angular/components/commit/b049b8d816eaaf376768af4c6be8c7d9e051d934) | fix | **button:** fix icon button density ([#26877](https://github.com/angular/components/pull/26877)) |
+| [13755056e9](https://github.com/angular/components/commit/13755056e98335890593d227af5a575d082583a7) | fix | **core:** don't use font shorthand property in typography-level ([#26865](https://github.com/angular/components/pull/26865)) |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [00ff979b96](https://github.com/angular/components/commit/00ff979b966e52565df0755570205548f2cc8467) | fix | zone on DateTime ignored ([#26887](https://github.com/angular/components/pull/26887)) |
+## Special Thanks
+Amy Sorto, Andrew Seguin, Joey Perrott, Jonathan Meier, Kristiyan Kostadinov, Paul Gschwendtner, Wagner Maciel and cusher
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.6"></a>
+# 15.2.6 "chiffon-cardigan" (2023-04-05)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cc5f7d0890](https://github.com/angular/components/commit/cc5f7d089072dc8839f467d0bf9648f8d7ab34ad) | fix | **menu:** move focus when opening via click ([#26874](https://github.com/angular/components/pull/26874)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fd58310a1f](https://github.com/angular/components/commit/fd58310a1fb0afd1fbda65663479b855dff2b560) | fix | **core:** don't use font shorthand property in typography-level ([#26865](https://github.com/angular/components/pull/26865)) |
+## Special Thanks
+Jonathan Meier and Kristiyan Kostadinov
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.0-next.4"></a>
+# 16.0.0-next.4 "plastic-pipe" (2023-03-29)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [24fab9992f](https://github.com/angular/components/commit/24fab9992f6ec689bcab7750cbbec18685e236c2) | fix | **overlay:** don't close if scroll is coming from inside overlay ([#26840](https://github.com/angular/components/pull/26840)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6ad47bf0f7](https://github.com/angular/components/commit/6ad47bf0f7794147cbd05631dc972d5aa19bcfef) | fix | **core:** allow keyboard navigation to disabled options ([#26745](https://github.com/angular/components/pull/26745)) |
+| [e6f1a7dd54](https://github.com/angular/components/commit/e6f1a7dd54b8e783d9bb2d123576ca5764c6437b) | fix | **datepicker:** remove div as a child of button ([#26838](https://github.com/angular/components/pull/26838)) |
+| [a9b61352c5](https://github.com/angular/components/commit/a9b61352c575f7869a22d8a311dfe1c66c2da7ef) | fix | **form-field:** Add `mdc-label` class to `<label>` ([#26851](https://github.com/angular/components/pull/26851)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e4901dfa72](https://github.com/angular/components/commit/e4901dfa720183b66ffc4d387aa5fba0b43210eb) | fix | update to latest typings ([#26854](https://github.com/angular/components/pull/26854)) |
+## Special Thanks
+Andrew Seguin, Jessica Janiuk, Kevin Vizcarra, Kristiyan Kostadinov, Wagner Maciel and Zach Arend
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.5"></a>
+# 15.2.5 "metal-plumber" (2023-03-29)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4ec3abd723](https://github.com/angular/components/commit/4ec3abd7233df53586c2a52082d01199b58b8e1b) | fix | **overlay:** don't close if scroll is coming from inside overlay ([#26840](https://github.com/angular/components/pull/26840)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [600d40eb24](https://github.com/angular/components/commit/600d40eb24502816a03133bff4b01080a02194c9) | fix | **datepicker:** remove div as a child of button ([#26838](https://github.com/angular/components/pull/26838)) |
+## Special Thanks
+Kristiyan Kostadinov and Wagner Maciel
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0-next.3"></a>
 # 16.0.0-next.3 "limonite-lime" (2023-03-23)
 ### material
