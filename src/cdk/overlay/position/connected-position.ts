@@ -52,6 +52,17 @@ export class ConnectionPositionPair {
   }
 }
 
+export function validateConnectionPositionPairs(pairs: ConnectionPositionPair[]) {
+  // TODO(crisbeto): remove these once Angular's template type
+  // checking is advanced enough to catch these cases.
+  pairs.forEach(pair => {
+    validateHorizontalPosition('originX', pair.originX);
+    validateVerticalPosition('originY', pair.originY);
+    validateHorizontalPosition('overlayX', pair.overlayX);
+    validateVerticalPosition('overlayY', pair.overlayY);
+  });
+}
+
 /**
  * Set of properties regarding the position of the origin and overlay relative to the viewport
  * with respect to the containing Scrollable elements.
