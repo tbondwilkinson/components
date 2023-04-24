@@ -13,8 +13,7 @@ import {
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
   ScrollingVisibility,
-  validateHorizontalPosition,
-  validateVerticalPosition,
+  validateConnectionPositionPairs,
 } from './connected-position';
 import {Observable, Subscription, Subject} from 'rxjs';
 import {OverlayReference} from '../overlay-reference';
@@ -1122,15 +1121,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
         throw Error('FlexibleConnectedPositionStrategy: At least one position is required.');
       }
 
-      // TODO(crisbeto): remove these once Angular's template type
-      // checking is advanced enough to catch these cases.
-      this._preferredPositions.forEach(pair => {
-        validateHorizontalPosition('originX', pair.originX);
-        validateVerticalPosition('originY', pair.originY);
-        validateHorizontalPosition('overlayX', pair.overlayX);
-        validateVerticalPosition('overlayY', pair.overlayY);
-      });
-    }
+    validateConnectionPositionPairs(this._preferredPositions.length);
   }
 
   /** Adds a single CSS class or an array of classes on the overlay panel. */

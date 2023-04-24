@@ -12,27 +12,48 @@ import {
 import {MockNgZone} from '@angular/cdk/testing/private';
 import {Platform} from '@angular/cdk/platform';
 
-declare global {
-  interface CSSStyleDeclaration {
-    anchorName?: string;
-  }
-}
-
-// Default width and height of the overlay and origin panels throughout these tests.
-const DEFAULT_HEIGHT = 30;
-const DEFAULT_WIDTH = 60;
-
-describe('AnchorPositioningStrategy', () => {
+fdescribe('AnchorPositioningStrategy', () => {
   let overlay: Overlay;
   let overlayContainer: OverlayContainer;
   let platform: Platform;
   let zone: MockNgZone;
   let overlayRef: OverlayRef;
+  let styles: HTMLStyleElement;
+
+  beforeAll(() => {
+    const styles = document.createElement('style') as HTMLStyleElement;
+    styles.innerHTML = `
+      @position-fallback --default-position {
+        @try {
+          inset-inline-start: anchor(self-start);
+          top: anchor(bottom);
+        }
+      }
+
+      .anchor {
+        width: 200px;
+        height: 200px;
+        background-color: rebeccapurple;
+        anchor-name: --anchor;
+      }
+
+      .overlay-content {
+        width: 100px;
+        height: 100px;
+        background-color: pink;
+      }
+    `;
+    document.head.appendChild(styles);
+  });
+
+  afterAll(() => {
+    styles.remove();
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule],
-      declarations: [TestOverlay],
+      declarations: [TestOverlayContent],
       providers: [{provide: NgZone, useFactory: () => (zone = new MockNgZone())}],
     });
 
@@ -48,92 +69,137 @@ describe('AnchorPositioningStrategy', () => {
 
   afterEach(() => {
     overlayContainer.ngOnDestroy();
-
     if (overlayRef) {
       overlayRef.dispose();
     }
   });
 
-  function attachOverlay(config: OverlayConfig) {
+  function createAnchorPositioningStrategy() {
+    return new AnchorPositioningStrategy('anchor', platform).withPositionFallback(
+      'default-position',
+    );
+  }
+
+  function createOverlay(config: OverlayConfig) {
     overlayRef = overlay.create(config);
-    overlayRef.attach(new ComponentPortal(TestOverlay));
+  }
+
+  function attachOverlay() {
+    overlayRef.attach(new ComponentPortal(TestOverlayContent));
     zone.simulateZoneExit();
   }
 
-  fdescribe('positioning', () => {
+  it('should throw when attempting to attach to multiple different overlays', () => {
+    const {anchorContainer} = createAnchorElements();
+    document.body.appendChild(anchorContainer);
+    const positionStrategy = createAnchorPositioningStrategy();
+    createOverlay({positionStrategy});
+    attachOverlay();
+
+    expect(() => attachOverlay()).toThrow();
+    anchorContainer.remove();
+  });
+
+  it('should not throw when trying to apply after being disposed', () => {
+    const {anchorContainer} = createAnchorElements();
+    document.body.appendChild(anchorContainer);
+    const positionStrategy = createAnchorPositioningStrategy();
+
+    createOverlay({positionStrategy});
+    attachOverlay();
+    overlayRef.dispose();
+
+    expect(() => positionStrategy.apply()).not.toThrow();
+    anchorContainer.remove();
+  });
+
+  it('should clean up after itself when disposed', () => {
+    const {anchorContainer} = createAnchorElements();
+    document.body.appendChild(anchorContainer);
+    const positionStrategy = createAnchorPositioningStrategy();
+
+    createOverlay({positionStrategy});
+    const pane = overlayRef.overlayElement;
+    const originalPanePosition = 'absolute';
+    pane.style.position = originalPanePosition;
+
+    attachOverlay();
+
+    overlayRef.dispose();
+
+    expect(pane.style.anchorDefault).toBeFalsy();
+    expect(pane.style.positionFallback).toBeFalsy();
+    expect(pane.style.position).toBe(originalPanePosition);
+    expect(pane.anchorElement).toBeFalsy();
+    anchorContainer.remove();
+  });
+
+  describe('positioning', () => {
+    let anchorContainer: HTMLElement;
     let anchor: HTMLElement;
     let positionStrategy: AnchorPositioningStrategy;
 
     beforeEach(() => {
-      anchor = createPositionedBlockElement();
-      document.body.appendChild(anchor);
-      positionStrategy = new AnchorPositioningStrategy('anchor', platform, document);
+      ({anchor, anchorContainer} = createAnchorElements());
+      document.body.appendChild(anchorContainer);
+      positionStrategy = createAnchorPositioningStrategy();
+      createOverlay({positionStrategy});
+      attachOverlay();
     });
 
     afterEach(() => {
-      anchor.remove();
+      anchorContainer.remove();
     });
 
     describe('in ltr', () => {
       it('should use `left` when positioning an element at the start', () => {
-        positionStrategy.withPositions([
-          {
-            originX: 'start',
-            originY: 'top',
-            overlayX: 'start',
-            overlayY: 'top',
-          },
-        ]);
+        const anchorClientRect = anchor.getBoundingClientRect();
+        const overlayClientRect = overlayRef.overlayElement.getBoundingClientRect();
+        expect(anchorClientRect.left).toEqual(overlayClientRect.left);
+        expect(anchorClientRect.right).not.toEqual(overlayClientRect.right);
+        expect(anchorClientRect.bottom).toEqual(overlayClientRect.top);
+      });
+    });
 
-        attachOverlay({positionStrategy});
+    describe('in rtl', () => {
+      it('should use `right` when positioning an element at the start', () => {
+        overlayRef.setDirection('rtl');
 
-        expect(overlayRef.hostElement.style.left).toBeTruthy();
-        expect(overlayRef.hostElement.style.right).toBeFalsy();
+        const anchorClientRect = anchor.getBoundingClientRect();
+        const overlayClientRect = overlayRef.overlayElement.getBoundingClientRect();
+        expect(anchorClientRect.left).not.toEqual(overlayClientRect.left);
+        expect(anchorClientRect.right).toEqual(overlayClientRect.right);
+        expect(anchorClientRect.bottom).toEqual(overlayClientRect.top);
       });
     });
   });
 });
 
-/** Creates an absolutely positioned, display: block element with a default size. */
-function createPositionedBlockElement() {
-  const element = createBlockElement();
-  element.style.position = 'absolute';
-  return element;
+/** Creates an anchor and its container. */
+function createAnchorElements() {
+  const anchorContainer = createAnchorContainerElement();
+  const anchor = createAnchorElement();
+  anchorContainer.appendChild(anchor);
+  return {anchor, anchorContainer};
 }
 
-/** Creates a block element with a default size. */
-function createBlockElement(tagName = 'div', namespace?: string) {
-  let element;
-
-  if (namespace) {
-    element = document.createElementNS(namespace, tagName) as HTMLElement;
-  } else {
-    element = document.createElement(tagName);
-  }
-  element.style.anchorName = 'anchor';
-
-  element.style.width = `${DEFAULT_WIDTH}px`;
-  element.style.height = `${DEFAULT_HEIGHT}px`;
-  element.style.backgroundColor = 'rebeccapurple';
-  element.style.zIndex = '100';
-  return element;
-}
-
-/** Creates an overflow container with a set height and width with margin. */
-function createOverflowContainerElement() {
+/** Creates an anchor. */
+function createAnchorElement() {
   const element = document.createElement('div');
-  element.style.position = 'relative';
-  element.style.overflow = 'auto';
-  element.style.height = '300px';
-  element.style.width = '300px';
-  element.style.margin = '100px';
+  element.className = 'anchor';
+  return element;
+}
+
+/** Creates a container for an anchor. */
+function createAnchorContainerElement() {
+  const element = document.createElement('div');
+  element.className = 'anchor-container';
   return element;
 }
 
 @Component({
   template: `
-    <div
-      style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>
+    <div class="overlay-content"></div>
   `,
 })
-class TestOverlay {}
+class TestOverlayContent {}

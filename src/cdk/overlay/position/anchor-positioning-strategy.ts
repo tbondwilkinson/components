@@ -7,64 +7,73 @@
  */
 
 import {OverlayReference} from '../overlay-reference';
-import {ElementRef, Inject} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {ElementRef} from '@angular/core';
 import {PositionStrategy} from './position-strategy';
 import {Platform} from '@angular/cdk/platform';
-import {ConnectionPositionPair, HorizontalConnectionPos} from './connected-position';
+import {
+  ConnectedOverlayPositionChange,
+  ConnectionPositionPair,
+  ScrollingVisibility,
+  validateConnectionPositionPairs,
+} from './connected-position';
+import {OverlayContainer} from '../overlay-container';
+import {FlexibleConnectedPositionStrategyOrigin} from './flexible-connected-position-strategy';
 
-/** Possible values that can be set as the anchor of a AnchorPositioningStrategy. */
-export type AnchorPositioningStrategyAnchor = ElementRef | Element | string;
-
-interface AnchorPositionioningProperty {
-  property: 'top' | 'bottom' | 'left' | 'right';
-  anchorSide: 'top' | 'bottom' | 'left' | 'right' | 'center';
-}
+/** Class to be added to the overlay bounding box. */
+const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
 
 // TODO(tbondwilkinson): Remove once anchorElement is recognized.
 declare global {
   interface HTMLElement {
     anchorElement: Element | undefined;
   }
+
   interface CSSStyleDeclaration {
+    anchorName?: string;
+    anchorDefault?: string;
     positionFallback?: string;
   }
 }
 
-let positionFallbackId = 0;
-
 export class AnchorPositioningStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayReference | null;
+  private _overlayRef: OverlayReference;
 
   /** The overlay pane element. */
   private _pane: HTMLElement;
 
+  /**
+   * Parent element for the overlay panel used to constrain the overlay panel's size to fit
+   * within the viewport.
+   */
+  private _boundingBox: HTMLElement | null;
+
+  /** The anchor element against which the overlay will be positioned. */
+  private _origin: FlexibleConnectedPositionStrategyOrigin;
+
+  /** The original positioning of the overlay pane element. */
+  private _paneOriginalPosition: string;
+
   /** Whether the strategy has been disposed of already. */
   private _isDisposed: boolean;
 
+  /** Keeps track of the CSS classes that the position strategy has applied on the overlay panel. */
+  private _appliedPanelClasses: string[] = [];
+
   /** Ordered list of preferred positions, from most to least desirable. */
-  private _preferredPositions: ConnectionPositionPair[] = [];
-
-  /** The anchor element against which the overlay will be positioned. */
-  private _anchor: AnchorPositioningStrategyAnchor;
-
-  /** Whether the current positioning is stale and should be re-applied. */
-  private _stalePositioning = true;
-
-  /** The style root to add stylesheets to. */
-  private _styleSheet?: CSSStyleSheet;
+  _preferredPositions: ConnectionPositionPair[] = [];
 
   constructor(
-    anchor: AnchorPositioningStrategyAnchor,
+    origin: FlexibleConnectedPositionStrategyOrigin,
+    private _document: Document,
     private _platform: Platform,
-    @Inject(DOCUMENT) private readonly _document: Document,
+    private _overlayContainer: OverlayContainer,
   ) {
-    this.withAnchor(anchor);
+    this.setOrigin(origin);
   }
 
   /** Attaches this position strategy to an overlay. */
-  attach(overlayRef: OverlayReference) {
+  attach(overlayRef: OverlayReference): void {
     if (
       this._overlayRef &&
       overlayRef !== this._overlayRef &&
@@ -73,7 +82,12 @@ export class AnchorPositioningStrategy implements PositionStrategy {
       throw Error('This position strategy is already attached to an overlay');
     }
 
+    this._validatePositions();
+
+    overlayRef.hostElement.classList.add(boundingBoxClass);
+
     this._overlayRef = overlayRef;
+    this._boundingBox = overlayRef.hostElement;
     this._pane = overlayRef.overlayElement;
     this._isDisposed = false;
   }
@@ -84,55 +98,29 @@ export class AnchorPositioningStrategy implements PositionStrategy {
     if (this._isDisposed || !this._platform.isBrowser) {
       return;
     }
-    if (!this._stalePositioning) {
-      return;
-    }
-    this._stalePositioning = false;
 
+    this._clearPanelClasses();
     this._resetOverlayElementStyles();
+    this._resetBoundingBoxStyles();
 
-    let anchor: Element | undefined;
-    let anchorName = '';
+    // Fixed position is necessary to position most anchored elements that reside within overlays.
+    this._pane.style.position = 'fixed';
 
-    if (typeof this._anchor === 'string') {
-      anchorName = `${this._anchor} `;
-    } else if (this._anchor instanceof ElementRef) {
-      anchor = this._anchor.nativeElement;
-    } else {
-      anchor = this._anchor;
-    }
+    const anchor =
+      this._origin instanceof ElementRef
+        ? (this._origin.nativeElement as Element)
+        : (this._origin as Element);
+    this._pane.anchorElement = anchor;
 
-    if (anchor) {
-      this._pane.anchorElement = anchor;
-    }
-
-    const anchorPreferredPositionings = this._getAnchorPreferredPositionings();
-    if (anchorPreferredPositionings.length === 1) {
-      const style = this._pane.style;
-      for (const {property, anchorSide} of anchorPreferredPositionings[0]) {
-        style[property] = `anchor(--${anchorName}${anchorSide})`;
-      }
-      return;
-    }
-    const positionFallbackName = `--overlay-fallback-${positionFallbackId++}`;
-    let positionFallback = `@position-fallback ${positionFallbackName} {\n`;
-
-    for (const positioning of anchorPreferredPositionings) {
-      positionFallback += '@try {\n';
-      for (const {property, anchorSide} of positioning) {
-        positionFallback += `${property}: anchor(--${anchorName} ${anchorSide});\n`;
-      }
-      positionFallback += '}\n';
-    }
-    positionFallback += '}';
-
-    this._pane.style.positionFallback = positionFallbackName;
-    this._addPositionFallbackStyle(positionFallback);
+    this._applyPositionFallback();
   }
 
   /** Called when the overlay is detached. */
   detach() {
-    this._stalePositioning = true;
+    this._pane.style.removeProperty('anchor-default');
+    this._pane.style.removeProperty('position-fallback');
+    this._pane.style.position = this._paneOriginalPosition;
+    delete this._pane.anchorElement;
   }
 
   /** Cleans up any DOM modifications made by the position strategy, if necessary. */
@@ -141,22 +129,8 @@ export class AnchorPositioningStrategy implements PositionStrategy {
       return;
     }
 
-    this._resetOverlayElementStyles();
     this.detach();
-    this._overlayRef = null;
-    this._styleSheet?.replaceSync('');
     this._isDisposed = true;
-  }
-
-  /**
-   * Adds new preferred positions.
-   * @param positions List of positions options for this overlay.
-   */
-  withPositions(positions: ConnectionPositionPair[]): this {
-    this._stalePositioning = true;
-    this._preferredPositions = positions;
-
-    return this;
   }
 
   /**
@@ -165,69 +139,64 @@ export class AnchorPositioningStrategy implements PositionStrategy {
    * relatively to a trigger (e.g. dropdown menus or tooltips).
    * @param anchor Reference to the new origin.
    */
-  withAnchor(anchor: AnchorPositioningStrategyAnchor): this {
-    this._stalePositioning = true;
-    this._anchor = anchor;
+  withOrigin(origin: FlexibleConnectedPositionStrategyOrigin): this {
+    if (!(origin instanceof Element || origin instanceof ElementRef)) {
+      throw new Error('AnchorPositioningStrategy only works with an Element or ElementRef');
+    }
+    this._origin = origin;
 
     return this;
   }
 
-  private _getAnchorPreferredPositionings(): AnchorPositionioningProperty[][] {
-    let overlayRect: DOMRect | undefined;
-    const anchorPositioningProperties: AnchorPositionioningProperty[][] = [];
-    for (const positionPair of this._preferredPositions) {
-      const xProperty = this._logicalToPhysicalPosition(positionPair.overlayX);
-      if (xProperty === 'center') {
-        // TODO(tbondwilkinson): Support center.
-        throw new Error('overlay center not supported by Anchor Positioning');
-      }
-      const yProperty = positionPair.overlayY;
-      if (yProperty === 'center') {
-        // TODO(twilkinson): Support center.
-        throw new Error('overlay center not supported by Anchor Positioning');
-      }
-      anchorPositioningProperties.push([
-        {
-          property: xProperty,
-          anchorSide: this._logicalToPhysicalPosition(positionPair.originX),
-        },
-        {
-          property: yProperty,
-          anchorSide: positionPair.originY,
-        },
-      ]);
+  private _applyPositionFallback() {}
+
+  /** Clears the classes that the position strategy has applied from the overlay panel. */
+  private _clearPanelClasses() {
+    if (this._pane) {
+      this._appliedPanelClasses.forEach(cssClass => {
+        this._pane.classList.remove(cssClass);
+      });
+      this._appliedPanelClasses = [];
     }
-    return anchorPositioningProperties;
   }
 
-  private _logicalToPhysicalPosition(
-    position: HorizontalConnectionPos,
-  ): 'left' | 'right' | 'center' {
-    if (position === 'start') {
-      return this._isRtl() ? 'right' : 'left';
-    }
-    if (position === 'end') {
-      return this._isRtl() ? 'left' : 'right';
-    }
-    return position;
+  /** Resets the styles for the bounding box so that a new positioning can be computed. */
+  private _resetBoundingBoxStyles() {
+    extendStyles(this._boundingBox!.style, {
+      top: '0',
+      left: '0',
+      right: '0',
+      bottom: '0',
+      height: '',
+      width: '',
+      alignItems: '',
+      justifyContent: '',
+    } as CSSStyleDeclaration);
   }
 
   /** Resets the styles for the overlay pane so that a new positioning can be computed. */
   private _resetOverlayElementStyles() {
-    this._pane.style.top = '';
-    this._pane.style.bottom = '';
-    this._pane.style.left = '';
-    this._pane.style.right = '';
+    extendStyles(this._pane.style, {
+      top: '',
+      left: '',
+      bottom: '',
+      right: '',
+      position: '',
+      transform: '',
+    } as CSSStyleDeclaration);
+  }
+}
+
+/** Shallow-extends a stylesheet object with another stylesheet object. */
+function extendStyles(
+  destination: CSSStyleDeclaration,
+  source: CSSStyleDeclaration,
+): CSSStyleDeclaration {
+  for (let key in source) {
+    if (source.hasOwnProperty(key)) {
+      destination[key] = source[key];
+    }
   }
 
-  /** Whether the we're dealing with an RTL context */
-  private _isRtl() {
-    return this._overlayRef!.getDirection() === 'rtl';
-  }
-
-  private _addPositionFallbackStyle(style: string) {
-    this._styleSheet = new CSSStyleSheet();
-    this._styleSheet.replaceSync(style);
-    this._document.adoptedStyleSheets = [...this._document.adoptedStyleSheets, this._styleSheet];
-  }
+  return destination;
 }

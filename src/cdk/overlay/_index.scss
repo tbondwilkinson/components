@@ -149,4 +149,26 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     // block scrolling on a page that doesn't have a scrollbar in the first place.
     overflow-y: scroll;
   }
+
+  @position-fallback --cdk-below-positions {
+    @try {
+      inset-inline-start: anchor(self-start);
+      top: anchor(bottom);
+    }
+
+    @try {
+      inset-inline-start: anchor(self-start);
+      bottom: anchor(top);
+    }
+
+    @try {
+      inset-inline-end: anchor(self-end);
+      top: anchor(bottom);
+    }
+
+    @try {
+      inset-inline-end: anchor(self-end);
+      bottom: anchor(top);
+    }
+  }
 }
