@@ -1121,7 +1121,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
         throw Error('FlexibleConnectedPositionStrategy: At least one position is required.');
       }
 
-    validateConnectionPositionPairs(this._preferredPositions.length);
+      validateConnectionPositionPairs(this._preferredPositions);
+    }
   }
 
   /** Adds a single CSS class or an array of classes on the overlay panel. */
